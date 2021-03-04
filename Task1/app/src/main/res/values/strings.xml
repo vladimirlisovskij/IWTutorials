@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Task1</string>
+    <string name="data">Данные</string>
+    <string name="edit">Редактировать</string>
+    <string name="data_editor">Введите данные</string>
+    <string name="submit">Оправить</string>
+    <string name="nameLab">Имя</string>
+    <string name="dateLab">Дата рождения</string>
+    <string name="placeLab">Место рождения</string>
+</resources>
