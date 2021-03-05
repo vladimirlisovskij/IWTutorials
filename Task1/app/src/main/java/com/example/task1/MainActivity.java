@@ -19,9 +19,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Form form;
 
-    private final String FORM_REQUEST_KEY = "request";
-    private final String FORM_RESULT_KEY = "result";
-    private final String SAVED_FORM = "form";
+    private String FORM_REQUEST_KEY;
+    private String FORM_RESULT_KEY;
+    private String SAVED_FORM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,17 +31,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         name = findViewById(R.id.name);
         date = findViewById(R.id.date);
         place = findViewById(R.id.place);
-
         but = findViewById(R.id.edit);
+
+        FORM_REQUEST_KEY = getResources().getString(R.string.formRequestKey);
+        FORM_RESULT_KEY = getResources().getString(R.string.formResultKey);
+        SAVED_FORM = getResources().getString(R.string.savedFormKey);
+
         but.setOnClickListener(this);
 
         if (savedInstanceState != null) {
             form = (Form) savedInstanceState.getSerializable(SAVED_FORM);
         } else {
             form = new Form();
-            form.setName("Володя");
-            form.setDate("11.01.2002");
-            form.setPlace("Симферополь");
+            form.setName(getResources().getString(R.string.defaultName));
+            form.setDate(getResources().getString(R.string.defaultDate));
+            form.setPlace(getResources().getString(R.string.defaultPlace));
         }
 
         name.setText(form.getName());

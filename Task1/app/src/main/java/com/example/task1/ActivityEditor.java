@@ -13,27 +13,30 @@ import java.util.HashMap;
 
 public class ActivityEditor extends AppCompatActivity implements View.OnClickListener {
 
-    EditText name;
-    EditText date;
-    EditText place;
+    private EditText name;
+    private EditText date;
+    private EditText place;
 
-    Button but;
+    private Button but;
 
-    Intent intent;
-
-    private final String FORM_REQUEST_KEY = "request";
-    private final String FORM_RESULT_KEY = "result";
+    private String FORM_REQUEST_KEY;
+    private String FORM_RESULT_KEY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-        intent = getIntent();
-
         name = findViewById(R.id.name_editor);
         date = findViewById(R.id.date_editor);
         place = findViewById(R.id.place_editor);
+
+        but = findViewById(R.id.submit);
+
+        Intent intent = getIntent();
+
+        FORM_RESULT_KEY = getResources().getString(R.string.formResultKey);
+        FORM_REQUEST_KEY = getResources().getString(R.string.formRequestKey);
 
         if (intent.getExtras() != null) {
             Form form = (Form) intent.getSerializableExtra(FORM_REQUEST_KEY);
@@ -41,12 +44,11 @@ public class ActivityEditor extends AppCompatActivity implements View.OnClickLis
             date.setText(form.getDate());
             place.setText(form.getPlace());
         } else  {
-            name.setText(intent.getStringExtra("Имя"));
-            date.setText(intent.getStringExtra("Дата рождения"));
-            place.setText(intent.getStringExtra("Место рождения"));
+            name.setText(intent.getStringExtra(getResources().getString(R.string.nameLab)));
+            date.setText(intent.getStringExtra(getResources().getString(R.string.dateLab)));
+            place.setText(intent.getStringExtra(getResources().getString(R.string.placeLab)));
         }
 
-        but = findViewById(R.id.submit);
         but.setOnClickListener(this);
     }
 

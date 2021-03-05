@@ -7,4 +7,10 @@
     <string name="nameLab">Имя</string>
     <string name="dateLab">Дата рождения</string>
     <string name="placeLab">Место рождения</string>
+    <string name="formRequestKey">REQUEST</string>
+    <string name="formResultKey">RESULT</string>
+    <string name="savedFormKey">SAVED</string>
+    <string name="defaultName">Володя</string>
+    <string name="defaultDate">11.01.2002</string>
+    <string name="defaultPlace">Симферополь</string>
 </resources>
