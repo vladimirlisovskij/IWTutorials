@@ -19,9 +19,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Form form;
 
-    private String FORM_REQUEST_KEY;
-    private String FORM_RESULT_KEY;
-    private String SAVED_FORM;
+    private String formRequestKey;
+    private String formResultKey;
+    private String savedFormKey;
+
+    private final int FORM_REQUEST = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +35,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         place = findViewById(R.id.place);
         but = findViewById(R.id.edit);
 
-        FORM_REQUEST_KEY = getResources().getString(R.string.formRequestKey);
-        FORM_RESULT_KEY = getResources().getString(R.string.formResultKey);
-        SAVED_FORM = getResources().getString(R.string.savedFormKey);
+        formRequestKey = getResources().getString(R.string.formRequestKey);
+        formResultKey = getResources().getString(R.string.formResultKey);
+        savedFormKey = getResources().getString(R.string.savedFormKey);
 
         but.setOnClickListener(this);
 
         if (savedInstanceState != null) {
-            form = (Form) savedInstanceState.getSerializable(SAVED_FORM);
+            form = (Form) savedInstanceState.getSerializable(savedFormKey);
         } else {
             form = new Form();
             form.setName(getResources().getString(R.string.defaultName));
@@ -56,15 +58,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(this, ActivityEditor.class);
-        intent.putExtra(FORM_REQUEST_KEY, form);
-        startActivityForResult(intent, 1);
+        intent.putExtra(formRequestKey, form);
+        startActivityForResult(intent, FORM_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            form = (Form) data.getSerializableExtra(FORM_RESULT_KEY);
+        if (requestCode == FORM_REQUEST && resultCode == RESULT_OK) {
+            form = (Form) data.getSerializableExtra(formResultKey);
             name.setText(form.getName());
             date.setText(form.getDate());
             place.setText(form.getPlace());
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void  onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putSerializable(SAVED_FORM, form);
+        savedInstanceState.putSerializable(savedFormKey, form);
     }
 }
 
