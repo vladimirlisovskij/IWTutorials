@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 public class ActivityEditor extends AppCompatActivity implements View.OnClickListener {
 
     EditText name;
@@ -18,6 +20,9 @@ public class ActivityEditor extends AppCompatActivity implements View.OnClickLis
     Button but;
 
     Intent intent;
+
+    private final String FORM_REQUEST_KEY = "request";
+    private final String FORM_RESULT_KEY = "result";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +36,10 @@ public class ActivityEditor extends AppCompatActivity implements View.OnClickLis
         place = findViewById(R.id.place_editor);
 
         if (intent.getExtras() != null) {
-            name.setText(intent.getStringExtra("name"));
-            date.setText(intent.getStringExtra("date"));
-            place.setText(intent.getStringExtra("place"));
+            Form form = (Form) intent.getSerializableExtra(FORM_REQUEST_KEY);
+            name.setText(form.getName());
+            date.setText(form.getDate());
+            place.setText(form.getPlace());
         } else  {
             name.setText(intent.getStringExtra("Имя"));
             date.setText(intent.getStringExtra("Дата рождения"));
@@ -47,9 +53,11 @@ public class ActivityEditor extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();
-        intent.putExtra("name", name.getText().toString());
-        intent.putExtra("date", date.getText().toString());
-        intent.putExtra("place", place.getText().toString());
+        Form form = new Form();
+        form.setName(name.getText().toString());
+        form.setDate(date.getText().toString());
+        form.setPlace(place.getText().toString());
+        intent.putExtra(FORM_RESULT_KEY, form);
         setResult(RESULT_OK, intent);
         finish();
     }
