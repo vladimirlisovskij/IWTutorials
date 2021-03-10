@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         place = findViewById(R.id.place);
         but = findViewById(R.id.edit);
 
-        formRequestKey = getResources().getString(R.string.formRequestKey);
-        formResultKey = getResources().getString(R.string.formResultKey);
-        savedFormKey = getResources().getString(R.string.savedFormKey);
+        formRequestKey = getString(R.string.formRequestKey);
+        formResultKey = getString(R.string.formResultKey);
+        savedFormKey = getString(R.string.savedFormKey);
 
         but.setOnClickListener(this);
 
@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             form = (Form) savedInstanceState.getSerializable(savedFormKey);
         } else {
             form = new Form();
-            form.setName(getResources().getString(R.string.defaultName));
-            form.setDate(getResources().getString(R.string.defaultDate));
-            form.setPlace(getResources().getString(R.string.defaultPlace));
+            form.setName(getString(R.string.defaultName));
+            form.setDate(getString(R.string.defaultDate));
+            form.setPlace(getString(R.string.defaultPlace));
         }
 
         name.setText(form.getName());
@@ -55,12 +55,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         place.setText(form.getPlace());
     }
 
+
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(this, ActivityEditor.class);
         intent.putExtra(formRequestKey, form);
         startActivityForResult(intent, FORM_REQUEST);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -32,8 +32,8 @@ public class ActivityEditor extends AppCompatActivity implements View.OnClickLis
 
         Intent intent = getIntent();
 
-        formResultKey = getResources().getString(R.string.formResultKey);
-        formRequestKey = getResources().getString(R.string.formRequestKey);
+        formResultKey = getString(R.string.formResultKey);
+        formRequestKey = getString(R.string.formRequestKey);
 
         if (intent.getExtras() != null) {
             Form form = (Form) intent.getSerializableExtra(formRequestKey);
@@ -41,13 +41,14 @@ public class ActivityEditor extends AppCompatActivity implements View.OnClickLis
             date.setText(form.getDate());
             place.setText(form.getPlace());
         } else  {
-            name.setText(intent.getStringExtra(getResources().getString(R.string.nameLab)));
-            date.setText(intent.getStringExtra(getResources().getString(R.string.dateLab)));
-            place.setText(intent.getStringExtra(getResources().getString(R.string.placeLab)));
+            name.setText(intent.getStringExtra(getString(R.string.nameLab)));
+            date.setText(intent.getStringExtra(getString(R.string.dateLab)));
+            place.setText(intent.getStringExtra(getString(R.string.placeLab)));
         }
 
         but.setOnClickListener(this);
     }
+
 
     @Override
     public void onClick(View v) {
