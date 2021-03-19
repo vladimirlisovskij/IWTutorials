@@ -40,10 +40,10 @@ public class MainActivity extends AppCompatActivity  implements MainRecyclerAdap
     private List<DataFormContainer> simulateData() {
         List<DataFormContainer> res = new ArrayList<>();
         for (int i = 0; i < 4; ++i) {
-            res.add(new DataFormContainer("https://www.meme-arsenal.com/memes/d57849838dbdab4d17fb394e98f736f7.jpg", "Володя", "+1234567890", "володя@мир.ру"));
+            res.add(new DataFormContainer("https://i.ibb.co/HTj14wR/cat1.jpg", "Володя", "+1234567890", "володя@мир.ру"));
             res.add(new DataFormContainer("", "name", "phone", "email"));
-            res.add(new DataFormContainer("https://www.meme-arsenal.com/memes/0b8369a32d8c81d64375dbdc8605a446.jpg", "вОлОдЯ", "+9876543212", "вОлОдЯ@мИр.Ру"));
-            res.add(new DataFormContainer("https://www.meme-arsenal.com/memes/cb724603ebafcdc0d31fe6f2e5c8a36b.jpg", "Volodya", "+987654345", "volodya@world.com"));
+            res.add(new DataFormContainer("https://i.ibb.co/CtgyPtR/cat2.jpg", "вОлОдЯ", "+9876543212", "вОлОдЯ@мИр.Ру"));
+            res.add(new DataFormContainer("https://i.ibb.co/D9dZTx4/cat3.jpg", "Volodya", "+987654345", "volodya@world.com"));
         }
         return res;
     }
