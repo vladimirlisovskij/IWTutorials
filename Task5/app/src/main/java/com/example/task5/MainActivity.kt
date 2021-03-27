@@ -16,9 +16,9 @@ class MainActivity : AppCompatActivity() {
 class DrawView(context: Context) : View(context) {
     private var paint: Paint = Paint()
     private var smileBox: RectF = RectF()
-        
-    override fun onDraw(canvas: Canvas?) {
-        canvas!!.drawRGB(123, 345, 234)
+
+    override fun onDraw(canvas: Canvas) {
+        canvas.drawRGB(123, 345, 234)
         val hCenter: Float = 0.5f * height
         val wCenter: Float = 0.5f * width
         paint.strokeWidth = 3f
