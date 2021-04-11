@@ -19,7 +19,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder>(){
 
         fun setData(data: Container) {
             Glide.with(avatarIV.context)
-                    .load(data.avatarHref)
+                    .load(data.imageLink)
                     .centerCrop()
                     .placeholder(R.drawable.ic_launcher_foreground)
                     .into(avatarIV)
@@ -29,17 +29,12 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder>(){
         }
 
         init {
-            itemView.setOnClickListener { _: View? ->
-                if (onItemClick != null) {
-                    val index = adapterPosition
-                    onItemClick!!.itemClick(containerList!![index], index)
+            itemView.setOnClickListener { _ ->
+                containerList?.let {
+                    onItemClick?.invoke(it[adapterPosition], adapterPosition)
                 }
             }
         }
-    }
-
-    interface OnItemClick {
-        fun itemClick(dataFormContainer: Container?, index: Int)
     }
 
     var containerList: ArrayList<Container>? = null
@@ -48,7 +43,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder>(){
             field = dataFormContainerList
         }
 
-    var onItemClick: OnItemClick? = null
+    var onItemClick: ( (dataFormContainer: Container, index: Int) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_item, parent, false)
@@ -56,16 +51,17 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder>(){
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val curData: Container = containerList!![position]
-        holder.setData(curData)
+        containerList?.let {
+            holder.setData(it[position])
+        }
     }
 
     override fun getItemCount(): Int {
-        return if (containerList == null) 0 else containerList!!.size
+        return containerList?.size ?: 0
     }
 
     fun deleteItem(index: Int): Boolean {
-        return if (containerList!!.size <= index || index < 0) {
+        return if (containerList == null || containerList!!.size <= index || index < 0) {
             false
         } else {
             containerList!!.removeAt(index)

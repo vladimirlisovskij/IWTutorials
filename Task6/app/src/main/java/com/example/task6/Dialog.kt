@@ -11,12 +11,13 @@ import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 
 class Dialog : DialogFragment() {
-    private var avatar: ImageView? = null
-    private var exitBut: Button? = null
-    private var deleteBut: Button? = null
-    private var showBut: Button? = null
-    var showListener: View.OnClickListener? = null
-    var deleteListener: View.OnClickListener? = null
+    private lateinit var avatar: ImageView
+    private lateinit var exitBut: Button
+    private lateinit var deleteBut: Button
+    private lateinit var showBut: Button
+
+    var showListener: ( (View) -> Unit )? = null
+    var deleteListener: ( (View) -> Unit)? = null
     var imgHref: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -25,14 +26,14 @@ class Dialog : DialogFragment() {
         deleteBut = v.findViewById(R.id.dialogDeleteBut)
         exitBut = v.findViewById(R.id.dialogExitBut)
         showBut = v.findViewById(R.id.dialogProfileBut)
-        exitBut?.setOnClickListener { _: View? -> dismiss() }
-        deleteBut?.setOnClickListener(deleteListener)
-        showBut?.setOnClickListener(showListener)
-        Glide.with(avatar!!.context)
+        exitBut.setOnClickListener { _: View? -> dismiss() }
+        deleteBut.setOnClickListener(deleteListener)
+        showBut.setOnClickListener(showListener)
+        Glide.with(avatar.context)
                 .load(imgHref)
                 .centerCrop()
                 .placeholder(R.drawable.ic_launcher_foreground)
-                .into(avatar!!)
+                .into(avatar)
         return v
     }
 }

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlin.collections.ArrayList
 
 
-class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClick {
+class MainActivity : AppCompatActivity() {
     companion object {
         const val COLUMN_COUNT: Int = 2
         const val DB_VERSION: Int = 1
@@ -30,9 +30,9 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClick {
         const val LOG_TAG: String = "myLog"
     }
 
-    private var mainRecycler: RecyclerView? = null
-    private var adapter: RecyclerAdapter? = null
-    private var dbHelper: DBHelper? = null
+    private lateinit var mainRecycler: RecyclerView
+    private lateinit var adapter: RecyclerAdapter
+    private lateinit var dbHelper: DBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(LOG_TAG, "читаем данные")
@@ -42,72 +42,71 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClick {
         initAdapter()
         dbHelper = DBHelper(this)
         try {
-            val db: SQLiteDatabase = dbHelper!!.writableDatabase
-            val c: Cursor = db.query(DB_TABLE, null, null, null, null, null, null, null)
-            val res: ArrayList<Container> = arrayListOf();
-            if (c.moveToFirst()) {
-                do {
-                    res.add(
-                        Container(
-                            c.getString(c.getColumnIndex(COL_IMAGE)),
-                            c.getString(c.getColumnIndex(COL_NAME)),
-                            c.getString(c.getColumnIndex(COL_PHONE)),
-                            c.getString(c.getColumnIndex(COL_EMAIL)),
-                            c.getString(c.getColumnIndex(COL_ID))
+            dbHelper.writableDatabase.let {
+                val c: Cursor = it.query(DB_TABLE, null, null, null, null, null, null, null)
+                val res: ArrayList<Container> = arrayListOf()
+                if (c.moveToFirst()) {
+                    do {
+                        res.add(
+                            Container(
+                                c.getString(c.getColumnIndex(COL_IMAGE)),
+                                c.getString(c.getColumnIndex(COL_NAME)),
+                                c.getString(c.getColumnIndex(COL_PHONE)),
+                                c.getString(c.getColumnIndex(COL_EMAIL)),
+                                c.getString(c.getColumnIndex(COL_ID))
+                            )
                         )
-                    )
-                } while (c.moveToNext())
+                    } while (c.moveToNext())
+                }
+                adapter.containerList = res
+                c.close()
             }
-            adapter!!.containerList = res
-            c.close()
         } catch (e: Exception) {
             Log.d(LOG_TAG, "ошибка " + e.message)
         } finally {
-            dbHelper!!.close()
+            dbHelper.close()
         }
         Log.d(LOG_TAG, "чтение.....ok\n")
     }
 
     private fun initAdapter() {
         adapter = RecyclerAdapter()
-        adapter!!.onItemClick = this
-        mainRecycler!!.layoutManager = GridLayoutManager(this, COLUMN_COUNT)
-        mainRecycler!!.adapter = adapter
-    }
-
-    override fun itemClick(dataFormContainer: Container?, index: Int) {
-        val manager = supportFragmentManager
-        val myDialogFragment = Dialog()
-        myDialogFragment.imgHref = dataFormContainer!!.avatarHref
-        myDialogFragment.showListener = View.OnClickListener { _ ->
-            Log.d(LOG_TAG, "показываем профиль")
-            val intent = Intent(this, ProfileActivity::class.java)
-            intent.putExtra(FORM_KEY, dataFormContainer)
-            startActivity(intent)
-            myDialogFragment.dismiss()
-            Log.d(LOG_TAG, "профиль.....ok\n")
-        }
-        myDialogFragment.deleteListener = View.OnClickListener { _ ->
-            Log.d(LOG_TAG, "удаление строки")
-            adapter!!.deleteItem(index)
-            try {
-                val db: SQLiteDatabase = dbHelper!!.writableDatabase;
-                db.delete(DB_TABLE, "id = ?", arrayOf(dataFormContainer.id))
-            } catch (e: Exception) {
-                Log.d(LOG_TAG, "ошибка " + e.message)
-            } finally {
-                dbHelper!!.close();
+        adapter.onItemClick = { dataFormContainer: Container, index: Int ->
+            val manager = supportFragmentManager
+            val myDialogFragment = Dialog()
+            myDialogFragment.imgHref = dataFormContainer.imageLink
+            myDialogFragment.showListener = { _ ->
+                Log.d(LOG_TAG, "показываем профиль")
+                val intent = Intent(this, ProfileActivity::class.java)
+                intent.putExtra(FORM_KEY, dataFormContainer)
+                startActivity(intent)
                 myDialogFragment.dismiss()
+                Log.d(LOG_TAG, "профиль.....ok\n")
             }
-            Log.d(LOG_TAG, "удаление.....ok\n")
+            myDialogFragment.deleteListener = { _ ->
+                Log.d(LOG_TAG, "удаление строки")
+                adapter.deleteItem(index)
+                try {
+                    val db: SQLiteDatabase = dbHelper.writableDatabase;
+                    db.delete(DB_TABLE, "id = ?", arrayOf(dataFormContainer.id))
+                } catch (e: Exception) {
+                    Log.d(LOG_TAG, "ошибка " + e.message)
+                } finally {
+                    dbHelper.close();
+                    myDialogFragment.dismiss()
+                }
+                Log.d(LOG_TAG, "удаление.....ok\n")
+            }
+            myDialogFragment.show(manager, "myDialog")
         }
-        myDialogFragment.show(manager, "myDialog")
+        mainRecycler.layoutManager = GridLayoutManager(this, COLUMN_COUNT)
+        mainRecycler.adapter = adapter
     }
 
     inner class DBHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-        override fun onCreate(db: SQLiteDatabase?) {
+        override fun onCreate(db: SQLiteDatabase) {
             Log.d(LOG_TAG, "создание базы")
-            db!!.execSQL(
+            db.execSQL(
                 "create table " + DB_TABLE  + " (" +
                         COL_ID + " integer primary key autoincrement," +
                         COL_NAME + " text," +
@@ -142,15 +141,16 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClick {
                 "вОлОдЯ@мИр.Ру",
                 "volodya@world.com"
             )
-            val cv: ContentValues = ContentValues()
-            for (i in 0..3) {
-                for (j in 0..3) {
-                    cv.clear()
-                    cv.put(COL_IMAGE, imgs[j])
-                    cv.put(COL_NAME, name[j])
-                    cv.put(COL_PHONE, phone[j])
-                    cv.put(COL_EMAIL, email[j])
-                    db.insert(DB_TABLE, null, cv)
+            ContentValues().let {
+                for (i in 0..3) {
+                    for (j in 0..3) {
+                        it.clear()
+                        it.put(COL_IMAGE, imgs[j])
+                        it.put(COL_NAME, name[j])
+                        it.put(COL_PHONE, phone[j])
+                        it.put(COL_EMAIL, email[j])
+                        db.insert(DB_TABLE, null, it)
+                    }
                 }
             }
             Log.d(LOG_TAG, "симулирование.....ok\n")
