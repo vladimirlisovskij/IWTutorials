@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <TextView
+        android:id="@+id/tempTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="temp" />
+
+    <TextView
+        android:id="@+id/humTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="hum" />
+
+    <TextView
+        android:id="@+id/wMainTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="wMain" />
+
+    <TextView
+        android:id="@+id/wDescTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="wDesc" />
+
+    <TextView
+        android:id="@+id/windTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="wind" />
+
+    <TextView
+        android:id="@+id/ssetTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sset" />
+
+    <TextView
+        android:id="@+id/sriseTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="srise" />
+
+</LinearLayout>
